@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="file_menu_items">
+        <item>@string/menu_item_new</item>
+        <item>@string/menu_item_open</item>
+        <item>@string/menu_item_close</item>
+        <item>@string/menu_item_save</item>
+        <item>@string/menu_item_save_as</item>
+    </array>
+    <array name="edit_menu_items">
+        <item>@string/menu_item_cut</item>
+        <item>@string/menu_item_copy</item>
+        <item>@string/menu_item_paste</item>
+        <item>@string/menu_item_undo</item>
+        <item>@string/menu_item_redo</item>
+    </array>
+</resources>

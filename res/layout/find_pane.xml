@@ -14,7 +14,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:ems="10"
-        android:hint="Find..."
+        android:hint="@string/hint_find"
         android:inputType="text" />
 
     <EditText
@@ -25,7 +25,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/edit_find"
         android:ems="10"
-        android:hint="Replace with..."
+        android:hint="@string/hint_replace"
         android:inputType="text" >
 
         <requestFocus />
@@ -45,21 +45,21 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Replace All" />
+            android:text="@string/button_replace_all" />
 
         <Button
             android:id="@+id/button_replace_find"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Replace/Find" />
+            android:text="@string/button_replace_find" />
 
         <Button
             android:id="@+id/button_find"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="    Find    " />
+            android:text="@string/button_find" />
 
     </LinearLayout>
 

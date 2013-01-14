@@ -1,8 +1,11 @@
 package org.jitu.wagtail;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -60,16 +63,72 @@ public class TabPane extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case R.id.menu_add:
-            ((WagtailET) getActivity()).addTab();
+        case R.id.menu_file:
+            showFileMenu();
             return true;
-        case R.id.menu_remove:
-            ((WagtailET) getActivity()).removeTab();
+        case R.id.menu_edit:
+            showEditMenu();
             return true;
-        case R.id.menu_show_hide:
-            showHideFindPane();
         default:
             return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void showFileMenu() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setItems(R.array.file_menu_items,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        onClickFile(dialog, which);
+                    }
+                });
+        builder.create().show();
+    }
+
+    private void showEditMenu() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setItems(R.array.edit_menu_items,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        onClickEdit(dialog, which);
+                    }
+                });
+        builder.create().show();
+    }
+
+    public void onClickFile(DialogInterface dialog, int which) {
+        Resources r = getResources();
+        String[] items = r.getStringArray(R.array.file_menu_items);
+        String item = items[which];
+        if (r.getString(R.string.menu_item_new).equals(item)) {
+            // onNew();
+        } else if (r.getString(R.string.menu_item_open).equals(item)) {
+            // onOpen();
+        } else if (r.getString(R.string.menu_item_close).equals(item)) {
+            // onClose();
+        } else if (r.getString(R.string.menu_item_save).equals(item)) {
+            // onSave();
+        } else if (r.getString(R.string.menu_item_save_as).equals(item)) {
+            // onSaveAs();
+        }
+    }
+
+    public void onClickEdit(DialogInterface dialog, int which) {
+        Resources r = getResources();
+        String[] items = r.getStringArray(R.array.edit_menu_items);
+        String item = items[which];
+        if (r.getString(R.string.menu_item_cut).equals(item)) {
+            // tabControl.cut(this);
+        } else if (r.getString(R.string.menu_item_copy).equals(item)) {
+            // tabControl.copy(this);
+        } else if (r.getString(R.string.menu_item_paste).equals(item)) {
+            // tabControl.paste(this);
+        } else if (r.getString(R.string.menu_item_undo).equals(item)) {
+            // tabControl.undo();
+        } else if (r.getString(R.string.menu_item_redo).equals(item)) {
+            // tabControl.redo();
         }
     }
 }
