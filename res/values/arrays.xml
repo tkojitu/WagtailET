@@ -8,8 +8,6 @@
         <item>@string/menu_item_save_as</item>
     </array>
     <array name="edit_menu_items">
-        <item>@string/menu_item_cut</item>
-        <item>@string/menu_item_copy</item>
         <item>@string/menu_item_paste</item>
         <item>@string/menu_item_undo</item>
         <item>@string/menu_item_redo</item>

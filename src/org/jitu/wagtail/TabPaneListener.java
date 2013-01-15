@@ -5,10 +5,10 @@ import android.app.ActionBar.TabListener;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 
-public class TabPaneControl implements TabListener {
+public class TabPaneListener implements TabListener {
     private Fragment fragment;
 
-    public TabPaneControl(Fragment fragment) {
+    public TabPaneListener(Fragment fragment) {
         this.fragment = fragment;
     }
 

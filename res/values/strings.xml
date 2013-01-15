@@ -13,6 +13,7 @@
     <string name="menu_item_cut">Cut</string>
     <string name="menu_item_edit">Edit</string>
     <string name="menu_item_file">File</string>
+    <string name="menu_item_find_replace">Find/Replace</string>
     <string name="menu_item_new">New</string>
     <string name="menu_item_open">Open&#8230;</string>
     <string name="menu_item_paste">Paste</string>
