@@ -26,7 +26,7 @@ public class TabPane extends Fragment {
             Fragment editPane = Fragment.instantiate(getActivity(), EditPane.class.getName());
             tx.add(R.id.tab_layout, editPane, "edit_pane");
         }
-        Fragment findPane = mgr.findFragmentByTag("find_pane"); 
+        Fragment findPane = mgr.findFragmentByTag("find_pane");
         if (findPane == null) {
             findPane = Fragment.instantiate(getActivity(), FindPane.class.getName());
             tx.add(R.id.tab_layout, findPane, "find_pane");
