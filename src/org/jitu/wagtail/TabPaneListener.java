@@ -15,7 +15,6 @@ public class TabPaneListener implements TabListener {
     @Override
     public void onTabSelected(Tab tab, FragmentTransaction ft) {
         ft.attach(fragment);
-        tab.setText(fragment.getTag());
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.jitu.wagtail;
 
+import java.io.File;
 import java.util.HashMap;
 
 import android.os.Bundle;
@@ -13,9 +14,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 
 public class WagtailET extends Activity {
+    private static final int ACTIVITY_FILE_CHOOSER = 1;
+    private static final int ACTIVITY_FILE_SAVER   = 2;
+
     private HashMap<String, ControlBoard> boards = new HashMap<String, ControlBoard>();
 
     @Override
@@ -24,17 +29,23 @@ public class WagtailET extends Activity {
         setContentView(R.layout.tab_pane_demo);
         ActionBar bar = getActionBar();
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        addTab();
+        addTab(null);
     }
 
-    private void addTab() {
+    private void addTab(File file) {
         ControlBoard board = new ControlBoard();
+        board.getFileControl().setFile(file);
         Fragment tabPane = newTabPane(board.getTag());
         TabPaneListener listener = board.newTabPaneListener(tabPane);
         boards.put(board.getTag(), board);
         ActionBar bar = getActionBar();
         Tab tab = bar.newTab();
         tab.setTabListener(listener);
+        String title = board.getFileControl().getFileName();
+        if (title.isEmpty()) {
+           title = getString(R.string.untitled);
+        }
+        tab.setText(title);
         bar.addTab(tab);
         bar.selectTab(tab);
     }
@@ -126,9 +137,9 @@ public class WagtailET extends Activity {
         String[] items = r.getStringArray(R.array.file_menu_items);
         String item = items[which];
         if (r.getString(R.string.menu_item_new).equals(item)) {
-            addTab();
+            addTab(null);
         } else if (r.getString(R.string.menu_item_open).equals(item)) {
-            // onOpen();
+            onOpen();
         } else if (r.getString(R.string.menu_item_close).equals(item)) {
             removeTab();
         } else if (r.getString(R.string.menu_item_save).equals(item)) {
@@ -136,6 +147,36 @@ public class WagtailET extends Activity {
         } else if (r.getString(R.string.menu_item_save_as).equals(item)) {
             // onSaveAs();
         }
+    }
+
+    private void onOpen() {
+        Intent intent = new Intent(this, FileChooser.class);
+        String home = FileControl.getHomePath();
+        intent.putExtra(FileChooser.ARG_PATH, home);
+        startActivityForResult(intent, ACTIVITY_FILE_CHOOSER);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode < 0) {
+            return;
+        }
+        switch (requestCode) {
+        case ACTIVITY_FILE_CHOOSER:
+            onFileChooserResult(data);
+            break;
+        case ACTIVITY_FILE_SAVER:
+            // onFileSaverResult(data);
+            break;
+        }
+    }
+
+    private void onFileChooserResult(Intent data) {
+        String path = data.getStringExtra(FileChooser.RESULT_PATH);
+        if (path.isEmpty()) {
+            return;
+        }
+        addTab(new File(path));
     }
 
     private void onClickEdit(DialogInterface dialog, int which) {

@@ -5,8 +5,10 @@ import android.widget.EditText;
 
 public class ControlBoard {
     private final String tag = getClass().getName() + "." + System.currentTimeMillis();
-    private TabPaneListener tabPaneListener;
+
     private EditControl editControl = new EditControl();
+    private FileControl fileControl = new FileControl();
+    private TabPaneListener tabPaneListener;
 
     public String getTag() {
         return tag;
@@ -23,5 +25,9 @@ public class ControlBoard {
 
     public void addTextWatcher(EditText edit) {
         editControl.addTextWatcher(edit);
+    }
+
+    public FileControl getFileControl() {
+        return fileControl;
     }
 }

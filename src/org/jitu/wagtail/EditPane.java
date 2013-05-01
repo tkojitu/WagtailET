@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class EditPane extends Fragment {
     @Override
@@ -13,6 +14,24 @@ public class EditPane extends Fragment {
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.z_edit_pane, container, false);
         addTextWatcher(view);
+        EditText edit = (EditText) view.findViewById(R.id.edit);
+        if (edit == null) {
+            Toast.makeText(getActivity(), "TabPane#onCreateView: invalid view.", Toast.LENGTH_LONG)
+                .show();
+            return view;
+        }
+        if (edit.getText().length() == 0) {
+            String tag = getParentFragment().getTag();
+            ControlBoard board = ((WagtailET) getActivity()).getControlBoard(tag);
+            String text = board.getFileControl().read();
+            if (text == null) {
+                String msg = "TabPane#onCreateView: " + 
+                        board.getFileControl().getError().getMessage();
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+                return view;
+            }
+            edit.setText(text);
+        }
         return view;
     }
 
