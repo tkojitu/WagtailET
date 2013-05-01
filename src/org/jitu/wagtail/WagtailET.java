@@ -3,23 +3,31 @@ package org.jitu.wagtail;
 import java.io.File;
 import java.util.HashMap;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 
 public class WagtailET extends Activity {
-    private static final int ACTIVITY_FILE_CHOOSER = 1;
-    private static final int ACTIVITY_FILE_SAVER   = 2;
+    public static final String OI_EXTRA_BUTTON_TEXT = "org.openintents.extra.BUTTON_TEXT";
+    public static final String OI_EXTRA_TITLE = "org.openintents.extra.TITLE";
+    public static final String OI_ACTION_PICK_DIRECTORY = "org.openintents.action.PICK_DIRECTORY";
+    public static final String OI_ACTION_PICK_FILE = "org.openintents.action.PICK_FILE";
+
+    private static final int REQUEST_OI_ACTION_PICK_FILE = 11;
+    private static final int REQUEST_OI_ACTION_PICK_DIRECTORY = 12;
 
     private HashMap<String, ControlBoard> boards = new HashMap<String, ControlBoard>();
 
@@ -150,29 +158,38 @@ public class WagtailET extends Activity {
     }
 
     private void onOpen() {
-        Intent intent = new Intent(this, FileChooser.class);
         String home = FileControl.getHomePath();
-        intent.putExtra(FileChooser.ARG_PATH, home);
-        startActivityForResult(intent, ACTIVITY_FILE_CHOOSER);
+        Intent intent = new Intent(OI_ACTION_PICK_FILE);    
+        intent.setData(Uri.parse("file://" + home));
+        intent.putExtra(OI_EXTRA_TITLE, getString(R.string.oi_open_title));
+        intent.putExtra(OI_EXTRA_BUTTON_TEXT, getString(R.string.oi_open_button));
+        try {
+            startActivityForResult(intent, REQUEST_OI_ACTION_PICK_FILE);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, R.string.oi_no_filemanager_installed, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode < 0) {
+        if (resultCode != RESULT_OK || data == null) {
             return;
         }
         switch (requestCode) {
-        case ACTIVITY_FILE_CHOOSER:
-            onFileChooserResult(data);
-            break;
-        case ACTIVITY_FILE_SAVER:
-            // onFileSaverResult(data);
+        case REQUEST_OI_ACTION_PICK_FILE:
+            onOiActionPickFile(data);
             break;
         }
     }
 
-    private void onFileChooserResult(Intent data) {
-        String path = data.getStringExtra(FileChooser.RESULT_PATH);
+    private void onOiActionPickFile(Intent data) {
+        String path = data.getDataString();
+        if (path == null || path.isEmpty()) {
+            return;
+        }
+        if (path.startsWith("file://")) {
+            path = path.substring(7);
+        }
         if (path.isEmpty()) {
             return;
         }
