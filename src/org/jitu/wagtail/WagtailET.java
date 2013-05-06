@@ -60,8 +60,8 @@ public class WagtailET extends Activity {
         bar.selectTab(tab);
     }
 
-    private Fragment newTabPane(String tag) {
-        Fragment tabPane = Fragment.instantiate(this, TabPane.class.getName());
+    private TabPane newTabPane(String tag) {
+        TabPane tabPane = (TabPane) Fragment.instantiate(this, TabPane.class.getName());
         getFragmentManager().beginTransaction().add(android.R.id.content, tabPane, tag).commit();
         return tabPane;
     }
@@ -76,7 +76,7 @@ public class WagtailET extends Activity {
             return;
         }
         try {
-            Fragment frag = findSelectedFragment();
+            Fragment frag = findSelectedTabPane();
             String tag = frag.getTag();
             getFragmentManager().beginTransaction().remove(frag).commit();
             boards.remove(tag);
@@ -85,11 +85,11 @@ public class WagtailET extends Activity {
         }
     }
 
-    private Fragment findSelectedFragment() {
+    private TabPane findSelectedTabPane() {
         for (String tag : boards.keySet()) {
             Fragment frag = getFragmentManager().findFragmentByTag(tag);
             if (!frag.isDetached()) {
-                return frag;
+                return (TabPane) frag;
             }
         }
         return null;
@@ -311,21 +311,21 @@ public class WagtailET extends Activity {
     }
 
     private void onFindReplace() {
-        TabPane tabPane = (TabPane) findSelectedFragment();
+        TabPane tabPane = (TabPane) findSelectedTabPane();
         tabPane.showHideFindPane();
     }
 
-    private Pair<Fragment, ControlBoard> getSelectedFragAndBoard() {
-        Fragment frag = findSelectedFragment();
-        if (frag == null) {
+    private Pair<TabPane, ControlBoard> getSelectedTabPaneAndBoard() {
+        TabPane tabPane = findSelectedTabPane();
+        if (tabPane == null) {
             return null;
         }
-        ControlBoard board = getControlBoard(frag.getTag());
-        return new Pair<Fragment, ControlBoard>(frag, board);
+        ControlBoard board = getControlBoard(tabPane.getTag());
+        return new Pair<TabPane, ControlBoard>(tabPane, board);
     }
 
     private Pair<EditText, ControlBoard> getSelectedEditAndBoard() {
-        Pair<Fragment, ControlBoard> pair = getSelectedFragAndBoard();
+        Pair<TabPane, ControlBoard> pair = getSelectedTabPaneAndBoard();
         if (pair == null) {
             return null;
         }
@@ -338,7 +338,7 @@ public class WagtailET extends Activity {
     }
 
     private ControlBoard getSelectedBoard() {
-        Pair<Fragment, ControlBoard> pair = getSelectedFragAndBoard();
+        Pair<TabPane, ControlBoard> pair = getSelectedTabPaneAndBoard();
         if (pair == null) {
             return null;
         }
@@ -347,5 +347,15 @@ public class WagtailET extends Activity {
 
     public ControlBoard getControlBoard(String tag) {
         return boards.get(tag);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Pair<TabPane, ControlBoard> pair = getSelectedTabPaneAndBoard();
+        if (!pair.first.isFindPaneVisible()) {
+            super.onBackPressed();
+            return;
+        }
+        pair.first.showHideFindPane();
     }
 }

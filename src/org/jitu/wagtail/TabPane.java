@@ -51,4 +51,8 @@ public class TabPane extends Fragment {
             getChildFragmentManager().beginTransaction().hide(bottom).commit();
         }
     }
+
+    public boolean isFindPaneVisible() {
+        return findPaneVisible;
+    }
 }
