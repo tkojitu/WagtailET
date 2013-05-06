@@ -45,21 +45,24 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_replace_all" />
+            android:text="@string/button_replace_all"
+            android:onClick="onClickReplaceAll" />
 
         <Button
             android:id="@+id/button_replace_find"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_replace_find" />
+            android:text="@string/button_replace_find"
+            android:onClick="onClickReplaceFind" />
 
         <Button
             android:id="@+id/button_find"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_find" />
+            android:text="@string/button_find"
+            android:onClick="onClickFind" />
 
     </LinearLayout>
 

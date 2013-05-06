@@ -110,9 +110,6 @@ public class WagtailET extends Activity {
         case R.id.menu_edit:
             showEditMenu();
             return true;
-        case R.id.menu_find_replace:
-            onFindReplace();
-            return true;
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -283,6 +280,8 @@ public class WagtailET extends Activity {
             onUndo();
         } else if (r.getString(R.string.menu_item_redo).equals(item)) {
             onRedo();
+        } else if (r.getString(R.string.menu_item_find_replace).equals(item)) {
+            onFindReplace();
         }
     }
 
@@ -357,5 +356,14 @@ public class WagtailET extends Activity {
             return;
         }
         pair.first.showHideFindPane();
+    }
+
+    public void onClickReplaceAll(View view) {
+    }
+
+    public void onClickReplaceFind(View view) {
+    }
+
+    public void onClickFind(View view) {
     }
 }

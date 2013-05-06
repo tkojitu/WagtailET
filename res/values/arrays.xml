@@ -11,5 +11,6 @@
         <item>@string/menu_item_paste</item>
         <item>@string/menu_item_undo</item>
         <item>@string/menu_item_redo</item>
+        <item>@string/menu_item_find_replace</item>
     </array>
 </resources>
