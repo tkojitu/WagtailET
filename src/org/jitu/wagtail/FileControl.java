@@ -1,7 +1,9 @@
 package org.jitu.wagtail;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,30 +16,35 @@ import android.os.Environment;
 
 public class FileControl {
     private Exception error;
-    private File file;
+    private File currentDirectory = new File(getHomePath());
+    private File currentFile;
 
     public static String getHomePath() {
         File storage = Environment.getExternalStorageDirectory();
         return storage.getAbsolutePath();
     }
-
-    public void setFile(File file) {
-        this.file = file;
+    
+    public void setCurrentDirectory(File dir) {
+        currentDirectory = dir;
     }
 
-    public String getFileName() {
-        if (file == null) {
+    public void setCurrentFile(File file) {
+        this.currentFile = file;
+    }
+
+    public String getCurrentFileName() {
+        if (currentFile == null) {
             return "";
         }
-        return file.getName();
+        return currentFile.getName();
     }
 
     public String read() {
-        if (file == null) {
+        if (currentFile == null) {
             return "";
         }
         try {
-            URL url = file.toURI().toURL();
+            URL url = currentFile.toURI().toURL();
             URLConnection conn = url.openConnection();
             InputStream is = conn.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
@@ -57,7 +64,36 @@ public class FileControl {
         }
     }
 
-    public Exception getError() {
-        return error;
+    public boolean saveAs(String filename, String text) {
+        File newFile = new File(currentDirectory, filename);
+        return saveFile(newFile, text);
+    }
+    
+    public boolean save(String text) {
+        if (currentFile == null) {
+            return true;
+        }
+        return saveFile(currentFile, text);
+    }
+
+    public boolean saveFile(File file, String text) {
+        try {
+            FileWriter wf = new FileWriter(file);
+            BufferedWriter bw = new BufferedWriter(wf);
+            bw.write(text, 0, text.length());
+            bw.close();
+            currentFile = file;
+            return true;
+        } catch (IOException e) {
+            error = e;
+            return false;
+        }
+    }
+
+    public String getErrorMessage() {
+        if (error == null) {
+            return "";
+        }
+        return error.getMessage();
     }
 }

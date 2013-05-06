@@ -25,8 +25,7 @@ public class EditPane extends Fragment {
             ControlBoard board = ((WagtailET) getActivity()).getControlBoard(tag);
             String text = board.getFileControl().read();
             if (text == null) {
-                String msg = "TabPane#onCreateView: " + 
-                        board.getFileControl().getError().getMessage();
+                String msg = "TabPane#onCreateView: " + board.getFileControl().getErrorMessage();
                 Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
                 return view;
             }

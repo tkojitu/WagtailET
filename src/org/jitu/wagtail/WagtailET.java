@@ -6,8 +6,10 @@ import java.util.HashMap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Pair;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.app.ActionBar;
@@ -42,14 +44,14 @@ public class WagtailET extends Activity {
 
     private void addTab(File file) {
         ControlBoard board = new ControlBoard();
-        board.getFileControl().setFile(file);
+        board.getFileControl().setCurrentFile(file);
         Fragment tabPane = newTabPane(board.getTag());
         TabPaneListener listener = board.newTabPaneListener(tabPane);
         boards.put(board.getTag(), board);
         ActionBar bar = getActionBar();
         Tab tab = bar.newTab();
         tab.setTabListener(listener);
-        String title = board.getFileControl().getFileName();
+        String title = board.getFileControl().getCurrentFileName();
         if (title.isEmpty()) {
            title = getString(R.string.untitled);
         }
@@ -151,9 +153,9 @@ public class WagtailET extends Activity {
         } else if (r.getString(R.string.menu_item_close).equals(item)) {
             removeTab();
         } else if (r.getString(R.string.menu_item_save).equals(item)) {
-            // onSave();
+            onSave();
         } else if (r.getString(R.string.menu_item_save_as).equals(item)) {
-            // onSaveAs();
+            onSaveAs();
         }
     }
 
@@ -170,6 +172,63 @@ public class WagtailET extends Activity {
         }
     }
 
+    private void onSave() {
+        Pair<EditText, ControlBoard> pair = getSelectedEditAndBoard();
+        if (pair == null) {
+            return;
+        }
+        if (pair.second.getFileControl().getCurrentFileName().isEmpty()) {
+            onSaveAs();
+            return;
+        }
+        if (!pair.second.getFileControl().save(pair.first.getText().toString())) {
+            String message = pair.second.getFileControl().getErrorMessage();
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void onSaveAs() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                EditText edit = (EditText) ((AlertDialog) dialog).findViewById(R.id.filename);
+                String filename = edit.getText().toString();
+                onFileSaveDialogOk(filename);
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        LayoutInflater inflater = getLayoutInflater();
+        builder.setView(inflater.inflate(R.layout.file_save_dialog, null));
+        builder.create().show();
+    }
+
+    private void onFileSaveDialogOk(String filename) {
+        Pair<EditText, ControlBoard> pair = getSelectedEditAndBoard();
+        if (pair == null) {
+            return;
+        }
+        if (!pair.second.getFileControl().saveAs(filename, pair.first.getText().toString())) {
+            String message = pair.second.getFileControl().getErrorMessage();
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void onClickOpenFileManager(View view) {
+        String home = FileControl.getHomePath();
+        Intent intent = new Intent(OI_ACTION_PICK_DIRECTORY);
+        intent.setData(Uri.parse("file://" + home));
+        intent.putExtra(OI_EXTRA_TITLE, getString(R.string.oi_pick_directory_title));
+        intent.putExtra(OI_EXTRA_BUTTON_TEXT, getString(R.string.oi_pick_directory_button));
+        try {
+            startActivityForResult(intent, REQUEST_OI_ACTION_PICK_DIRECTORY);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, R.string.oi_no_filemanager_installed, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != RESULT_OK || data == null) {
@@ -178,6 +237,9 @@ public class WagtailET extends Activity {
         switch (requestCode) {
         case REQUEST_OI_ACTION_PICK_FILE:
             onOiActionPickFile(data);
+            break;
+        case REQUEST_OI_ACTION_PICK_DIRECTORY:
+            onOiActionPickDirectory(data);
             break;
         }
     }
@@ -194,6 +256,21 @@ public class WagtailET extends Activity {
             return;
         }
         addTab(new File(path));
+    }
+
+    private void onOiActionPickDirectory(Intent data) {
+        String dir = data.getDataString();
+        if (dir == null || dir.isEmpty()) {
+            return;
+        }
+        if (dir.startsWith("file://")) {
+            dir = dir.substring(7);
+        }
+        ControlBoard board = getSelectedBoard();
+        if (board == null) {
+            return;
+        }
+        board.getFileControl().setCurrentDirectory(new File(dir));
     }
 
     private void onClickEdit(DialogInterface dialog, int which) {
@@ -258,6 +335,14 @@ public class WagtailET extends Activity {
 
     private EditText getEditText(Fragment frag) {
         return (EditText) frag.getView().findViewById(R.id.edit);
+    }
+
+    private ControlBoard getSelectedBoard() {
+        Pair<Fragment, ControlBoard> pair = getSelectedFragAndBoard();
+        if (pair == null) {
+            return null;
+        }
+        return pair.second;
     }
 
     public ControlBoard getControlBoard(String tag) {
