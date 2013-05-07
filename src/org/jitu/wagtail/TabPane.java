@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 public class TabPane extends Fragment {
     private boolean findPaneVisible = false;
@@ -54,5 +55,9 @@ public class TabPane extends Fragment {
 
     public boolean isFindPaneVisible() {
         return findPaneVisible;
+    }
+
+    public EditText getEdit() {
+        return (EditText) getView().findViewById(R.id.edit);
     }
 }

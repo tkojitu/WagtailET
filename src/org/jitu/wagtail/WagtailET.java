@@ -44,14 +44,14 @@ public class WagtailET extends Activity {
 
     private void addTab(File file) {
         ControlBoard board = new ControlBoard();
-        board.getFileControl().setCurrentFile(file);
+        board.setCurrentFile(file);
         Fragment tabPane = newTabPane(board.getTag());
         TabPaneListener listener = board.newTabPaneListener(tabPane);
         boards.put(board.getTag(), board);
         ActionBar bar = getActionBar();
         Tab tab = bar.newTab();
         tab.setTabListener(listener);
-        String title = board.getFileControl().getCurrentFileName();
+        String title = board.getCurrentFileName();
         if (title.isEmpty()) {
            title = getString(R.string.untitled);
         }
@@ -170,16 +170,16 @@ public class WagtailET extends Activity {
     }
 
     private void onSave() {
-        Pair<EditText, ControlBoard> pair = getSelectedEditAndBoard();
+        Pair<TabPane, ControlBoard> pair = getSelectedTabPaneAndBoard();
         if (pair == null) {
             return;
         }
-        if (pair.second.getFileControl().getCurrentFileName().isEmpty()) {
+        if (pair.second.getCurrentFileName().isEmpty()) {
             onSaveAs();
             return;
         }
-        if (!pair.second.getFileControl().save(pair.first.getText().toString())) {
-            String message = pair.second.getFileControl().getErrorMessage();
+        if (!pair.second.fileSave(pair.first)) {
+            String message = pair.second.getFileErrorMessage();
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         }
     }
@@ -203,12 +203,12 @@ public class WagtailET extends Activity {
     }
 
     private void onFileSaveDialogOk(String filename) {
-        Pair<EditText, ControlBoard> pair = getSelectedEditAndBoard();
+        Pair<TabPane, ControlBoard> pair = getSelectedTabPaneAndBoard();
         if (pair == null) {
             return;
         }
-        if (!pair.second.getFileControl().saveAs(filename, pair.first.getText().toString())) {
-            String message = pair.second.getFileControl().getErrorMessage();
+        if (!pair.second.fileSaveAs(pair.first, filename)) {
+            String message = pair.second.getFileErrorMessage();
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         }
     }
@@ -267,7 +267,7 @@ public class WagtailET extends Activity {
         if (board == null) {
             return;
         }
-        board.getFileControl().setCurrentDirectory(new File(dir));
+        board.setCurrentDirectory(new File(dir));
     }
 
     private void onClickEdit(DialogInterface dialog, int which) {
@@ -286,31 +286,31 @@ public class WagtailET extends Activity {
     }
 
     private void onPaste() {
-        Pair<EditText, ControlBoard> pair = getSelectedEditAndBoard();
+        Pair<TabPane, ControlBoard> pair = getSelectedTabPaneAndBoard();
         if (pair == null) {
             return;
         }
-        pair.second.getEditControl().paste(this, pair.first);
+        pair.second.editPaste(pair.first);
     }
 
     private void onUndo() {
-        Pair<EditText, ControlBoard> pair = getSelectedEditAndBoard();
+        Pair<TabPane, ControlBoard> pair = getSelectedTabPaneAndBoard();
         if (pair == null) {
             return;
         }
-        pair.second.getEditControl().undo(pair.first);
+        pair.second.editUndo(pair.first);
     }
 
     private void onRedo() {
-        Pair<EditText, ControlBoard> pair = getSelectedEditAndBoard();
+        Pair<TabPane, ControlBoard> pair = getSelectedTabPaneAndBoard();
         if (pair == null) {
             return;
         }
-        pair.second.getEditControl().redo(pair.first);
+        pair.second.editRedo(pair.first);
     }
 
     private void onFindReplace() {
-        TabPane tabPane = (TabPane) findSelectedTabPane();
+        TabPane tabPane = findSelectedTabPane();
         tabPane.showHideFindPane();
     }
 
@@ -321,19 +321,6 @@ public class WagtailET extends Activity {
         }
         ControlBoard board = getControlBoard(tabPane.getTag());
         return new Pair<TabPane, ControlBoard>(tabPane, board);
-    }
-
-    private Pair<EditText, ControlBoard> getSelectedEditAndBoard() {
-        Pair<TabPane, ControlBoard> pair = getSelectedTabPaneAndBoard();
-        if (pair == null) {
-            return null;
-        }
-        EditText edit = getEditText(pair.first);
-        return new Pair<EditText, ControlBoard>(edit, pair.second);
-    }
-
-    private EditText getEditText(Fragment frag) {
-        return (EditText) frag.getView().findViewById(R.id.edit);
     }
 
     private ControlBoard getSelectedBoard() {
