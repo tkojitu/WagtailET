@@ -352,5 +352,10 @@ public class WagtailET extends Activity {
     }
 
     public void onClickFind(View view) {
+        Pair<TabPane, ControlBoard> pair = getSelectedTabPaneAndBoard();
+        if (pair == null) {
+            return;
+        }
+        pair.second.editFind(pair.first);
     }
 }

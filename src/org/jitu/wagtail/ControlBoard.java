@@ -71,4 +71,10 @@ public class ControlBoard {
         EditText edit = tabPane.getEdit();
         editControl.redo(edit);
     }
+
+    public void editFind(TabPane tabPane) {
+        String needle = tabPane.getNeedleText();
+        EditText edit = tabPane.getEdit();
+        editControl.find(edit, needle);
+    }
 }

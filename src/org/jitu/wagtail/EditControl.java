@@ -43,4 +43,14 @@ public class EditControl {
     public String getText(EditText edit) {
         return edit.getText().toString();
     }
+
+    public void find(EditText edit, String needle) {
+        int index = edit.getSelectionEnd();
+        String haystack = edit.getText().toString();
+        int ret = haystack.indexOf(needle, index);
+        if (ret < 0) {
+            return;
+        }
+        edit.setSelection(ret, ret + needle.length());
+    }
 }
