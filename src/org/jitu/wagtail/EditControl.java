@@ -45,6 +45,9 @@ public class EditControl {
     }
 
     public void find(EditText edit, String needle) {
+        if (needle.isEmpty()) {
+            return;
+        }
         int index = edit.getSelectionEnd();
         String haystack = edit.getText().toString();
         int ret = haystack.indexOf(needle, index);
