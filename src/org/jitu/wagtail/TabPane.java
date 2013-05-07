@@ -72,4 +72,16 @@ public class TabPane extends Fragment {
         EditText edit = (EditText) bottom.getView().findViewById(R.id.edit_find);
         return edit.getText().toString();
     }
+
+    public String getReplacementText() {
+        if (!findPaneVisible) {
+            return "";
+        }
+        Fragment bottom = getChildFragmentManager().findFragmentByTag("find_pane");
+        if (bottom == null) {
+            return "";
+        }
+        EditText edit = (EditText) bottom.getView().findViewById(R.id.edit_replace);
+        return edit.getText().toString();
+    }
 }

@@ -40,7 +40,7 @@ public class ClipboardControl {
         return seq.subSequence(st, ed);
     }
 
-    protected void delete(EditText edit) {
+    public void delete(EditText edit) {
         int st = edit.getSelectionStart();
         int ed = edit.getSelectionEnd();
         if (st == ed) {

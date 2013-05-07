@@ -56,4 +56,14 @@ public class EditControl {
         }
         edit.setSelection(ret, ret + needle.length());
     }
+
+    public void replaceFind(EditText edit, String needle, String replacement) {
+        if (needle.isEmpty()) {
+            return;
+        }
+        clipper.delete(edit);
+        int index = edit.getSelectionStart();
+        edit.getEditableText().insert(index, replacement);
+        find(edit, needle);
+    }
 }

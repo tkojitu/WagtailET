@@ -77,4 +77,11 @@ public class ControlBoard {
         EditText edit = tabPane.getEdit();
         editControl.find(edit, needle);
     }
+
+    public void editReplaceFind(TabPane tabPane) {
+        String needle = tabPane.getNeedleText();
+        String replacement = tabPane.getReplacementText();
+        EditText edit = tabPane.getEdit();
+        editControl.replaceFind(edit, needle, replacement);
+    }
 }
