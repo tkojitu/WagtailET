@@ -44,26 +44,38 @@ public class EditControl {
         return edit.getText().toString();
     }
 
-    public void find(EditText edit, String needle) {
+    public boolean find(EditText edit, String needle) {
         if (needle.isEmpty()) {
-            return;
+            return false;
         }
         int index = edit.getSelectionEnd();
         String haystack = edit.getText().toString();
         int ret = haystack.indexOf(needle, index);
         if (ret < 0) {
-            return;
+            return false;
         }
         edit.setSelection(ret, ret + needle.length());
+        return true;
     }
 
-    public void replaceFind(EditText edit, String needle, String replacement) {
+    public boolean replaceFind(EditText edit, String needle, String replacement) {
         if (needle.isEmpty()) {
-            return;
+            return false;
         }
         clipper.delete(edit);
         int index = edit.getSelectionStart();
         edit.getEditableText().insert(index, replacement);
-        find(edit, needle);
+        return find(edit, needle);
+    }
+
+    public boolean replaceAll(EditText edit, String needle, String replacement) {
+        boolean found = find(edit, needle);
+        if (!found) {
+            return false;
+        }
+        while (found) {
+            found = replaceFind(edit, needle, replacement);
+        }
+        return true;
     }
 }

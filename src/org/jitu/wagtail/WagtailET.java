@@ -346,6 +346,11 @@ public class WagtailET extends Activity {
     }
 
     public void onClickReplaceAll(View view) {
+        Pair<TabPane, ControlBoard> pair = getSelectedTabPaneAndBoard();
+        if (pair == null) {
+            return;
+        }
+        pair.second.editReplaceAll(pair.first);
     }
 
     public void onClickReplaceFind(View view) {
