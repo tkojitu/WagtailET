@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <RadioGroup
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/find_option_radio_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/down" />
+
+        <RadioButton
+            android:id="@+id/find_option_radio_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/up" />
+
+    </RadioGroup>
+
+    <CheckBox
+        android:id="@+id/find_option_check_ignore_case"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ignore_case" />
+
+</LinearLayout>

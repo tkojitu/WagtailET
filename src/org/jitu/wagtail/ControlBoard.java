@@ -72,23 +72,23 @@ public class ControlBoard {
         editControl.redo(edit);
     }
 
-    public void editFind(TabPane tabPane) {
+    public void editFind(TabPane tabPane, boolean doesFindDown, boolean doesIgnoreCase) {
         String needle = tabPane.getNeedleText();
         EditText edit = tabPane.getEdit();
-        editControl.find(edit, needle);
+        editControl.find(edit, needle, doesFindDown, doesIgnoreCase);
     }
 
-    public void editReplaceFind(TabPane tabPane) {
+    public void editReplaceFind(TabPane tabPane, boolean doesFindDown, boolean doesIgnoreCase) {
         String needle = tabPane.getNeedleText();
         String replacement = tabPane.getReplacementText();
         EditText edit = tabPane.getEdit();
-        editControl.replaceFind(edit, needle, replacement);
+        editControl.replaceFind(edit, needle, replacement, doesFindDown, doesIgnoreCase);
     }
 
-    public void editReplaceAll(TabPane tabPane) {
+    public void editReplaceAll(TabPane tabPane, boolean doesFindDown, boolean doesIgnoreCase) {
         String needle = tabPane.getNeedleText();
         String replacement = tabPane.getReplacementText();
         EditText edit = tabPane.getEdit();
-        editControl.replaceAll(edit, needle, replacement);
+        editControl.replaceAll(edit, needle, replacement, doesFindDown, doesIgnoreCase);
     }
 }

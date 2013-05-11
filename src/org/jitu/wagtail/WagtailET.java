@@ -10,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Toast;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -32,6 +34,8 @@ public class WagtailET extends Activity {
     private static final int REQUEST_OI_ACTION_PICK_DIRECTORY = 12;
 
     private HashMap<String, ControlBoard> boards = new HashMap<String, ControlBoard>();
+    private boolean findOtionDown = true;
+    private boolean findOptionIgnoreCase = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -282,6 +286,8 @@ public class WagtailET extends Activity {
             onRedo();
         } else if (r.getString(R.string.menu_item_find_replace).equals(item)) {
             onFindReplace();
+        } else if (r.getString(R.string.menu_item_find_option).equals(item)) {
+            onFindOption();
         }
     }
 
@@ -312,6 +318,37 @@ public class WagtailET extends Activity {
     private void onFindReplace() {
         TabPane tabPane = findSelectedTabPane();
         tabPane.showHideFindPane();
+    }
+
+    private void onFindOption() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                AlertDialog ad = (AlertDialog) dialog;
+                RadioButton radio = (RadioButton) ad.findViewById(R.id.find_option_radio_up);
+                findOtionDown = !radio.isChecked();
+                CheckBox check = (CheckBox) ad.findViewById(R.id.find_option_check_ignore_case);
+                findOptionIgnoreCase = check.isChecked();
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+            }
+        });
+        LayoutInflater inflater = getLayoutInflater();
+        View container = inflater.inflate(R.layout.find_option_dialog, null);
+        builder.setView(container);
+        AlertDialog dialog = builder.create();
+        setupFindOptionDialog(container);
+        dialog.show();
+    }
+
+    private void setupFindOptionDialog(View container) {
+        int radio_id = findOtionDown ? R.id.find_option_radio_down : R.id.find_option_radio_up;
+        RadioButton radio = (RadioButton) container.findViewById(radio_id);
+        radio.setChecked(true);
+        CheckBox check = (CheckBox) container.findViewById(R.id.find_option_check_ignore_case);
+        check.setChecked(findOptionIgnoreCase);
     }
 
     private Pair<TabPane, ControlBoard> getSelectedTabPaneAndBoard() {
@@ -350,7 +387,7 @@ public class WagtailET extends Activity {
         if (pair == null) {
             return;
         }
-        pair.second.editReplaceAll(pair.first);
+        pair.second.editReplaceAll(pair.first, findOtionDown, findOptionIgnoreCase);
     }
 
     public void onClickReplaceFind(View view) {
@@ -358,7 +395,7 @@ public class WagtailET extends Activity {
         if (pair == null) {
             return;
         }
-        pair.second.editReplaceFind(pair.first);
+        pair.second.editReplaceFind(pair.first, findOtionDown, findOptionIgnoreCase);
     }
 
     public void onClickFind(View view) {
@@ -366,6 +403,18 @@ public class WagtailET extends Activity {
         if (pair == null) {
             return;
         }
-        pair.second.editFind(pair.first);
+        pair.second.editFind(pair.first, findOtionDown, findOptionIgnoreCase);
+    }
+
+    public void onClickFindOptionDown(View view) {
+        findOtionDown = true;
+    }
+
+    public void onClickFindOptionUp(View view) {
+        findOtionDown = false;
+    }
+
+    public void onClickFindOptionIgnoreCase(View view) {
+        findOptionIgnoreCase = !findOptionIgnoreCase;
     }
 }

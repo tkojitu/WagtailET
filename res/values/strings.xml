@@ -21,10 +21,14 @@
     <string name="menu_item_save">Save</string>
     <string name="menu_item_save_as">Save As&#8230;</string>
     <string name="menu_item_undo">Undo</string><string name="ok">OK</string>
+    <string name="menu_item_find_option">Find Option&#8230;</string>
     <string name="no">No</string>
     <string name="replace_message">Do you want to replace it?</string>
     <string name="untitled">Untitled</string>
     <string name="yes">Yes</string>
+    <string name="down">Down</string>
+    <string name="up">Up</string>
+    <string name="ignore_case">Ignore Case</string>
 
     <string name="file_manager_desc">Open with an external file manager.</string>
     <string name="oi_open_button">Open</string>
