@@ -23,7 +23,8 @@
             android:ems="10"
             android:gravity="top|left"
             android:inputType="textMultiLine"
-            android:textSize="14sp" >
+            android:textSize="14sp"
+            android:typeface="monospace" >
             <requestFocus />
         </EditText>
 
