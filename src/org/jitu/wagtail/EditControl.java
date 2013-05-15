@@ -22,7 +22,7 @@ public class EditControl {
         clipper.paste(context, edit);
     }
 
-    public void addTextWatcher(EditText edit) {
+    public void setupEditHistorian(EditText edit) {
         edit.addTextChangedListener(historian);
     }
 

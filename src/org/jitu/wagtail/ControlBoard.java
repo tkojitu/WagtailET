@@ -22,8 +22,8 @@ public class ControlBoard {
         return tabPaneListener;
     }
 
-    public void addTextWatcher(EditText edit) {
-        editControl.addTextWatcher(edit);
+    public void setupEditHistorian(EditText edit) {
+        editControl.setupEditHistorian(edit);
     }
 
     public String getCurrentFileName() {
@@ -90,5 +90,11 @@ public class ControlBoard {
         String replacement = tabPane.getReplacementText();
         EditText edit = tabPane.getEdit();
         editControl.replaceAll(edit, needle, replacement, doesFindDown, doesIgnoreCase);
+    }
+
+    public void setupIndentMan(EditText edit) {
+        IndentMan man = new IndentMan();
+        edit.setKeyListener(man);
+        edit.addTextChangedListener(man);
     }
 }

@@ -13,16 +13,16 @@ public class EditPane extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.z_edit_pane, container, false);
-        addTextWatcher(view);
-        EditText edit = (EditText) view.findViewById(R.id.edit);
+        EditText edit = getEdit(view);
         if (edit == null) {
-            Toast.makeText(getActivity(), "TabPane#onCreateView: invalid view.", Toast.LENGTH_LONG)
-                .show();
+            String msg = "TabPane#onCreateView: invalid view.";
+            Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
             return view;
         }
+        ControlBoard board = getBoard();
+        board.setupEditHistorian(edit);
+        board.setupIndentMan(edit);
         if (edit.getText().length() == 0) {
-            String tag = getParentFragment().getTag();
-            ControlBoard board = ((WagtailET) getActivity()).getControlBoard(tag);
             String text = board.fileRead();
             if (text == null) {
                 String msg = "TabPane#onCreateView: " + board.getFileErrorMessage();
@@ -34,12 +34,13 @@ public class EditPane extends Fragment {
         return view;
     }
 
-    private void addTextWatcher(View view) {
-        EditText edit = (EditText) view.findViewById(R.id.edit);
-        WagtailET app = (WagtailET) getActivity();
+    private EditText getEdit(View view) {
+        return (EditText) view.findViewById(R.id.edit);
+    }
+
+    private ControlBoard getBoard() {
         String tag = getParentTag();
-        ControlBoard board = app.getControlBoard(tag);
-        board.addTextWatcher(edit);
+        return ((WagtailET) getActivity()).getControlBoard(tag);
     }
 
     private String getParentTag() {
