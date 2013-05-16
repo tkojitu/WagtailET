@@ -55,11 +55,7 @@ public class WagtailET extends Activity {
         ActionBar bar = getActionBar();
         Tab tab = bar.newTab();
         tab.setTabListener(listener);
-        String title = board.getCurrentFileName();
-        if (title.isEmpty()) {
-           title = getString(R.string.untitled);
-        }
-        tab.setText(title);
+        setTabTitle(board, tab);
         bar.addTab(tab);
         bar.selectTab(tab);
     }
@@ -68,6 +64,14 @@ public class WagtailET extends Activity {
         TabPane tabPane = (TabPane) Fragment.instantiate(this, TabPane.class.getName());
         getFragmentManager().beginTransaction().add(android.R.id.content, tabPane, tag).commit();
         return tabPane;
+    }
+
+    private void setTabTitle(ControlBoard board, Tab tab) {
+        String title = board.getCurrentFileName();
+        if (title.isEmpty()) {
+           title = getString(R.string.untitled);
+        }
+        tab.setText(title);
     }
 
     private void removeTab() {
@@ -214,7 +218,13 @@ public class WagtailET extends Activity {
         if (!pair.second.fileSaveAs(pair.first, filename)) {
             String message = pair.second.getFileErrorMessage();
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+            return;
         }
+        Tab tab = getActionBar().getSelectedTab();
+        if (tab == null) {
+            return;
+        }
+        setTabTitle(pair.second, tab);
     }
 
     public void onClickOpenFileManager(View view) {
