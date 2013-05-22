@@ -1,7 +1,8 @@
-package org.jitu.wagtail;
+package org.jitu.wagtail.et;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import android.app.Fragment;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 
 public class WagtailET extends Activity {
@@ -118,6 +121,9 @@ public class WagtailET extends Activity {
         case R.id.menu_edit:
             showEditMenu();
             return true;
+        case R.id.menu_intents:
+            showIntentsMenu();
+            return true;
         default:
             return super.onOptionsItemSelected(item);
         }
@@ -142,6 +148,18 @@ public class WagtailET extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         onClickEdit(dialog, which);
+                    }
+                });
+        builder.create().show();
+    }
+
+    private void showIntentsMenu() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setItems(R.array.intents_menu_items,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        onClickIntents(dialog, which);
                     }
                 });
         builder.create().show();
@@ -426,5 +444,26 @@ public class WagtailET extends Activity {
 
     public void onClickFindOptionIgnoreCase(View view) {
         findOptionIgnoreCase = !findOptionIgnoreCase;
+    }
+
+    private void onClickIntents(DialogInterface dialog, int which) {
+        Resources r = getResources();
+        String[] items = r.getStringArray(R.array.intents_menu_items);
+        String item = items[which];
+        if (r.getString(R.string.menu_item_date).equals(item)) {
+            onClickDate();
+        }
+    }
+
+    private void onClickDate() {
+        Intent intent = new Intent("wagtail.intent.action.DATE");
+        intent.setType("text/plain");
+        intent.putExtra("pattern", "abc");
+        PackageManager packageManager = getPackageManager();
+        List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
+        boolean isIntentSafe = activities.size() > 0;
+        if (isIntentSafe) {
+            startActivity(intent);
+        }
     }
 }

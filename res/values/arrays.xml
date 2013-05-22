@@ -14,4 +14,7 @@
         <item>@string/menu_item_find_replace</item>
         <item>@string/menu_item_find_option</item>
     </array>
+    <array name="intents_menu_items">
+        <item>@string/menu_item_date</item>
+    </array>
 </resources>

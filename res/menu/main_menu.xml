@@ -3,4 +3,6 @@
         android:title="@string/menu_item_file" />
     <item android:id="@+id/menu_edit"
         android:title="@string/menu_item_edit" />
+    <item android:id="@+id/menu_intents"
+        android:title="@string/menu_item_intents" />
 </menu>

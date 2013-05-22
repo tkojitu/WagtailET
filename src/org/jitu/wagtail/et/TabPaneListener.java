@@ -1,4 +1,4 @@
-package org.jitu.wagtail;
+package org.jitu.wagtail.et;
 
 import android.app.ActionBar.Tab;
 import android.app.ActionBar.TabListener;
