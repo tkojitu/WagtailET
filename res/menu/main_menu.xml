@@ -1,4 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/menu_button_save"
+          android:title="@string/menu_item_save"
+          android:showAsAction="ifRoom|withText" />
     <item android:id="@+id/menu_file"
         android:title="@string/menu_item_file" />
     <item android:id="@+id/menu_edit"

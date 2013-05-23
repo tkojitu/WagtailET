@@ -115,6 +115,9 @@ public class WagtailET extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+        case R.id.menu_button_save:
+            onSave();
+            return true;
         case R.id.menu_file:
             showFileMenu();
             return true;
@@ -458,10 +461,10 @@ public class WagtailET extends Activity {
     private void onClickDate() {
         Intent intent = new Intent("wagtail.intent.action.DATE");
         intent.setType("text/plain");
-        intent.putExtra("pattern", "abc");
+        intent.putExtra("pattern", "yyyyMMdd");
         PackageManager packageManager = getPackageManager();
         List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
-        boolean isIntentSafe = activities.size() > 0;
+        boolean isIntentSafe = (activities.size() > 0);
         if (isIntentSafe) {
             startActivity(intent);
         }
