@@ -133,12 +133,23 @@ public class EditControl {
 
     public boolean replaceFind(EditText edit, String needle, String replacement,
                                boolean doesFindDown, boolean doesIgnoreCase) {
+        return replaceFindGroup(edit, needle, replacement, true, doesFindDown, doesIgnoreCase);
+    }
+
+    public boolean replaceFindGroup(EditText edit, String needle, String replacement,
+                                    boolean isGroup, boolean doesFindDown, boolean doesIgnoreCase) {
         if (needle.isEmpty()) {
             return false;
+        }
+        if (isGroup) {
+            historian.addEditEventGroup();
         }
         clipper.delete(edit);
         int index = edit.getSelectionStart();
         edit.getEditableText().insert(index, replacement);
+        if (isGroup) {
+            historian.addEditEventGroup();
+        }
         return find(edit, needle, doesFindDown, doesIgnoreCase);
     }
 
@@ -148,9 +159,12 @@ public class EditControl {
         if (!found) {
             return false;
         }
+        historian.addEditEventGroup();
         while (found) {
-            found = replaceFind(edit, needle, replacement, doesFindDown, doesIgnoreCase);
+            found = replaceFindGroup(edit, needle, replacement, false, doesFindDown,
+                                     doesIgnoreCase);
         }
+        historian.addEditEventGroup();
         return true;
     }
 }

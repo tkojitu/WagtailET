@@ -49,6 +49,19 @@ public class EditHistorian implements TextWatcher {
         if (undos.isEmpty()) {
             return;
         }
+        EditEvent event = undoOne(editable);
+        if (!(event instanceof EditEventGroup)) {
+            return;
+        }
+        while (!undos.isEmpty()) {
+            event = undoOne(editable);
+            if (event instanceof EditEventGroup) {
+                break;
+            }
+        }
+    }
+
+    private EditEvent undoOne(Editable editable) {
         EditEvent event = undos.removeLast();
         redos.addLast(event);
         undoing = true;
@@ -57,12 +70,26 @@ public class EditHistorian implements TextWatcher {
         } finally {
             undoing = false;
         }
+        return event;
     }
 
     public void redo(Editable editable) {
         if (redos.isEmpty()) {
             return;
         }
+        EditEvent event = redoOne(editable);
+        if (!(event instanceof EditEventGroup)) {
+            return;
+        }
+        while (!redos.isEmpty()) {
+            event = redoOne(editable);
+            if (event instanceof EditEventGroup) {
+                break;
+            }
+        }
+    }
+
+    private EditEvent redoOne(Editable editable) {
         EditEvent event = redos.removeLast();
         undos.addLast(event);
         undoing = true;
@@ -71,6 +98,11 @@ public class EditHistorian implements TextWatcher {
         } finally {
             undoing = false;
         }
+        return event;
+    }
+
+    public void addEditEventGroup() {
+        undos.addLast(new EditEventGroup());
     }
 }
 
@@ -96,5 +128,17 @@ class EditEvent {
 
     void redo(Editable editable) {
         editable.replace(beforePosition, beforePosition + before.length(), after);
+    }
+}
+
+class EditEventGroup extends EditEvent {
+    EditEventGroup() {
+        super(-1, "");
+    }
+
+    void undo(Editable editable) {
+    }
+
+    void redo(Editable editable) {
     }
 }
