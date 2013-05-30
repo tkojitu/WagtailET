@@ -23,13 +23,13 @@ public class TabPane extends Fragment {
     private void addFrags() {
         FragmentManager mgr = getChildFragmentManager();
         FragmentTransaction tx = mgr.beginTransaction();
-        if (mgr.findFragmentByTag("edit_pane") == null) {
+        if (getEditPane() == null) {
             Fragment editPane = Fragment.instantiate(getActivity(), EditPane.class.getName());
             tx.add(R.id.tab_layout, editPane, "edit_pane");
         }
-        Fragment findPane = mgr.findFragmentByTag("find_pane");
+        FindPane findPane = getFindPane();
         if (findPane == null) {
-            findPane = Fragment.instantiate(getActivity(), FindPane.class.getName());
+            findPane = (FindPane) Fragment.instantiate(getActivity(), FindPane.class.getName());
             tx.add(R.id.tab_layout, findPane, "find_pane");
         }
         if (findPaneVisible) {
@@ -41,16 +41,25 @@ public class TabPane extends Fragment {
     }
 
     public void showHideFindPane() {
-        Fragment bottom = getChildFragmentManager().findFragmentByTag("find_pane");
-        if (bottom == null) {
+        FindPane findPane = getFindPane();
+        if (findPane == null) {
             return;
         }
         findPaneVisible = !findPaneVisible;
         if (findPaneVisible) {
-            getChildFragmentManager().beginTransaction().show(bottom).commit();
+            getChildFragmentManager().beginTransaction().show(findPane).commit();
+            requestFocusFindPane();
         } else {
-            getChildFragmentManager().beginTransaction().hide(bottom).commit();
+            getChildFragmentManager().beginTransaction().hide(findPane).commit();
         }
+    }
+
+    private void requestFocusFindPane() {
+        FindPane findPane = getFindPane();
+        if (findPane == null || !isFindPaneVisible()) {
+            return;
+        }
+        findPane.requestFocusEditFind();
     }
 
     public boolean isFindPaneVisible() {
@@ -58,30 +67,40 @@ public class TabPane extends Fragment {
     }
 
     public EditText getEdit() {
-        return (EditText) getView().findViewById(R.id.edit);
+        return getEditPane().getEdit();
     }
 
     public String getNeedleText() {
         if (!findPaneVisible) {
             return "";
         }
-        Fragment bottom = getChildFragmentManager().findFragmentByTag("find_pane");
-        if (bottom == null) {
+        FindPane findPane = getFindPane();
+        if (findPane == null) {
             return "";
         }
-        EditText edit = (EditText) bottom.getView().findViewById(R.id.edit_find);
-        return edit.getText().toString();
+        return findPane.getEditFindString();
     }
 
     public String getReplacementText() {
         if (!findPaneVisible) {
             return "";
         }
-        Fragment bottom = getChildFragmentManager().findFragmentByTag("find_pane");
-        if (bottom == null) {
+        FindPane findPane = getFindPane();
+        if (findPane == null) {
             return "";
         }
-        EditText edit = (EditText) bottom.getView().findViewById(R.id.edit_replace);
-        return edit.getText().toString();
+        return findPane.getEditReplaceString();
+    }
+
+    private EditPane getEditPane() {
+        return (EditPane) getChildFragmentManager().findFragmentByTag("edit_pane");
+    }
+
+    private FindPane getFindPane() {
+        return (FindPane) getChildFragmentManager().findFragmentByTag("find_pane");
+    }
+
+    public void requestFocusEdit() {
+        getEditPane().requestFocusEdit();
     }
 }

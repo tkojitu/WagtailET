@@ -46,4 +46,12 @@ public class EditPane extends Fragment {
     private String getParentTag() {
         return getParentFragment().getTag();
     }
+
+    public EditText getEdit() {
+        return (EditText) getView().findViewById(R.id.edit);
+    }
+
+    public void requestFocusEdit() {
+        getEdit(getView()).requestFocus();
+    }
 }

@@ -418,6 +418,7 @@ public class WagtailET extends Activity {
         if (pair == null) {
             return;
         }
+        pair.first.requestFocusEdit();
         pair.second.editReplaceAll(pair.first, findOtionDown, findOptionIgnoreCase);
     }
 
@@ -426,6 +427,7 @@ public class WagtailET extends Activity {
         if (pair == null) {
             return;
         }
+        pair.first.requestFocusEdit();
         pair.second.editReplaceFind(pair.first, findOtionDown, findOptionIgnoreCase);
     }
 
@@ -434,6 +436,7 @@ public class WagtailET extends Activity {
         if (pair == null) {
             return;
         }
+        pair.first.requestFocusEdit();
         pair.second.editFind(pair.first, findOtionDown, findOptionIgnoreCase);
     }
 
